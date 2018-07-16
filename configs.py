@@ -47,12 +47,6 @@ class Config(object):
 
 
 def get_config(parse=True, **optional_kwargs):
-    """
-    Get configurations as attributes of class
-    1. Parse configurations with argparse.
-    2. Create Config class initilized with parsed kwargs.
-    3. Return Config class.
-    """
     parser = argparse.ArgumentParser()
 
     # Mode
