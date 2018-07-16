@@ -16,8 +16,8 @@ validLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size,
 
 model = models.cnnNlp().to(config.device)
 
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=1e-4)
+criterion = nn.CrossEntropyLoss(ignore_index=0)
+optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
 
 for i in range(config.n_epoch):
     model.train()
