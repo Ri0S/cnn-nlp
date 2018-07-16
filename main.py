@@ -22,7 +22,7 @@ optimizer = optim.Adam(model.parameters(), lr=1e-4)
 for i in range(config.n_epoch):
     model.train()
     total_loss = 0
-    for idx, (inputs, target) in enumerate(tqdm(trainLoader)):
+    for idx, (inputs, target) in enumerate(tqdm(trainLoader, ncols=80)):
         optimizer.zero_grad()
         out = model(inputs)
         loss = criterion(out, target)
