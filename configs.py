@@ -57,9 +57,11 @@ def get_config(parse=True, **optional_kwargs):
 
     # Mode
     parser.add_argument('--mode', type=str, default='train')
+    parser.add_argument('--model', type=str, default='epoch0')
+    parser.add_argument('--char2word', type=str2bool, default='True')
 
     # Train
-    parser.add_argument('--batch_size', type=int, default=80)
+    parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--eval_batch_size', type=int, default=80)
     parser.add_argument('--n_epoch', type=int, default=30)
     parser.add_argument('--learning_rate', type=float, default=1e-4)
