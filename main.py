@@ -11,13 +11,13 @@ inv_dict = pickle.load(open(config.id2char_path, 'rb'))
 config.vocab_size = len(inv_dict)
 
 trainLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
-validLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
+validLoader = DataLoader(utils.Dsets('valid'), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
 
 
 model = models.cnnNlp().to(config.device)
 
 criterion = nn.CrossEntropyLoss(ignore_index=0)
-optimizer = optim.Adam(model.parameters(), lr=config.learning_rate)
+optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
 for i in range(config.n_epoch):
     model.train()
@@ -28,14 +28,14 @@ for i in range(config.n_epoch):
         loss = criterion(out, target)
         loss.backward()
 
-        total_loss += loss
+        total_loss += loss.item()
         optimizer.step()
-    print('epoch', i, 'loss:', total_loss.item() / idx)
+    print('epoch', i, 'loss:', total_loss / idx)
     torch.save(model.state_dict(), './model/epoch' + str(i))
     model.eval()
     loss = 0
-    for idx, (inputs, target) in enumerate(validLoader):
+    for idx, (inputs, target) in enumerate(tqdm(validLoader, ncols=80)):
         out = model(inputs)
-        loss += criterion(out, target)
-    print('valid loss: ', loss.itme() / idx)
+        loss += criterion(out, target).item()
+    print('valid loss: ', loss / idx)
 
