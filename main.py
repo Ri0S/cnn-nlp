@@ -35,7 +35,7 @@ for i in range(config.n_epoch):
     model.eval()
     loss = 0
     for idx, (inputs, target) in enumerate(validLoader):
-        out = model(input)
+        out = model(inputs)
         loss += criterion(out, target)
     print('valid loss: ', loss.itme() / idx)
 
