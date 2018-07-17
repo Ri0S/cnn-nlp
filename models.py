@@ -6,8 +6,12 @@ from configs import config
 class cnnNlp(nn.Module):
     def __init__(self):
         super(cnnNlp, self).__init__()
-        self.char2word = modules.char2Word()
-        
+
+        if config.char2word:
+            self.char2word = modules.char2Word()
+        else:
+            self.embedding = nn.Embedding(config.vocab_size, 64)       
+ 
         if config.model == 'resnet34':
             resnet = ResNet(modules.BasicBlock, [3, 4, 6, 3])
         elif config.model == 'resnet50':
