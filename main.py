@@ -17,7 +17,7 @@ else:
 
 if config.succeed:
     start = int(config.model[5:])
-    save_state = torch.load('./model/' + config.model)
+    saved_state = torch.load('./model/' + config.model)
     model.load_state_dict(saved_state)
 
 if config.mode == 'train':
