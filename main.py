@@ -15,6 +15,11 @@ if config.char2word:
 else:
     model = models.cnnNlpEj().to(config.device)
 
+if config.succeed:
+    start = int(config.model[5:])
+    save_state = torch.load('./model/' + config.model)
+    model.load_state_dict(saved_state)
+
 if config.mode == 'train':
     trainLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
     validLoader = DataLoader(utils.Dsets('valid'), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
@@ -22,7 +27,7 @@ if config.mode == 'train':
     criterion = nn.CrossEntropyLoss(ignore_index=0)
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
 
-    for i in range(config.n_epoch):
+    for i in range(start, start + config.n_epoch):
         model.train()
         total_loss = 0
         for idx, (inputs, target) in enumerate(tqdm(trainLoader, ncols=80)):
