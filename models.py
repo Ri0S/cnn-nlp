@@ -22,7 +22,10 @@ class cnnNlp(nn.Module):
         self.resnet = resnet
 
     def forward(self, inputs):
-        wordvec = self.char2word(inputs).unsqueeze(1)
+        if config.char2word:
+            wordvec = self.char2word(inputs).unsqueeze(1)
+        else:
+            wordvec = self.embedding(inputs).view(inputs.size(0), 1, -1, 64)
         out = self.resnet(wordvec)
 
         return out
