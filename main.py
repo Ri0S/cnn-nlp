@@ -40,7 +40,7 @@ if config.mode == 'train':
             total_loss += loss.item()
             optimizer.step()
         print('epoch', i, 'loss:', total_loss / idx)
-        torch.save(model.state_dict(), './model/' + config.model + '_epoch_' + str(i))
+        torch.save(model.state_dict(), './model/' + config.model + 'ctow_'  + str(config.char2word)  + '_epoch_' + str(i))
         model.eval()
         loss = 0
         for idx, (inputs, target) in enumerate(tqdm(validLoader, ncols=80)):
