@@ -22,13 +22,16 @@ if config.succeed:
 else:
     start = 0
 
+if config.early_stop:
+    pt = 0
+
 if config.mode == 'train':
     trainLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
     validLoader = DataLoader(utils.Dsets('valid'), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
 
     criterion = nn.CrossEntropyLoss(ignore_index=0)
     optimizer = optim.Adam(model.parameters(), lr=1e-4)
-
+    min_loss = 100
     for i in range(start, start + config.n_epoch):
         model.train()
         total_loss = 0
@@ -48,6 +51,13 @@ if config.mode == 'train':
             out = model(inputs)
             loss += criterion(out, target).item()
         print('valid loss: ', loss / idx)
+        if config.early_stop:
+            if loss > min_loss:
+                pt += 1
+                if pt > config.early_stop:
+                    break
+            else:
+                min_loss = loss
 else:
     testLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
     saved_state = torch.load('./model/' + config.saved_model)

@@ -52,11 +52,12 @@ def get_config(parse=True, **optional_kwargs):
     # Mode
     parser.add_argument('--mode', type=str, default='train')
     parser.add_argument('--model', type=str, default='resnet18')
-    parser.add_argument('--saved_model', type=str, default='epoch0')
+    parser.add_argument('--saved_model', type=str, default='resnet18_epoch0')
     parser.add_argument('--char2word', type=str2bool, default='False')
     parser.add_argument('--succeed', type=str2bool, default='False')
 
     # Train
+    parser.add_argument('--early_stop', type=int, default=None)
     parser.add_argument('--batch_size', type=int, default=32)
     parser.add_argument('--eval_batch_size', type=int, default=80)
     parser.add_argument('--n_epoch', type=int, default=10)
