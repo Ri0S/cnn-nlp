@@ -16,9 +16,11 @@ else:
     model = models.cnnNlpEj().to(config.device)
 
 if config.succeed:
-    start = int(config.model[5:])
-    save_state = torch.load('./model/' + config.model)
-    model.load_state_dict(saved_state)
+    start = int(config.model[[a.isdigit() for a in config.saved_model[10:]].index(True) + 10:])
+    save_state = torch.load('./model/' + config.saved_model)
+    model.load_state_dict(save_state)
+else:
+    start = 0
 
 if config.mode == 'train':
     trainLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
@@ -39,7 +41,7 @@ if config.mode == 'train':
             total_loss += loss.item()
             optimizer.step()
         print('epoch', i, 'loss:', total_loss / idx)
-        torch.save(model.state_dict(), './model/epoch' + str(i))
+        torch.save(model.state_dict(), './model/' + config.model + '_epoch_' + str(i))
         model.eval()
         loss = 0
         for idx, (inputs, target) in enumerate(tqdm(validLoader, ncols=80)):
@@ -47,8 +49,8 @@ if config.mode == 'train':
             loss += criterion(out, target).item()
         print('valid loss: ', loss / idx)
 else:
-    testLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)    
-    saved_state = torch.load('./model/' + config.model)
+    testLoader = DataLoader(utils.Dsets(config.mode), batch_size=config.batch_size, shuffle=True, collate_fn=utils.collate_fn)
+    saved_state = torch.load('./model/' + config.saved_model)
     model.load_state_dict(saved_state)
     model.eval()
 
@@ -61,5 +63,3 @@ else:
     print('Total:', total)
     print('Correct:', correct)
     print('Accuracy:', correct / total)
-
-

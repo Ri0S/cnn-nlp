@@ -51,8 +51,9 @@ def get_config(parse=True, **optional_kwargs):
 
     # Mode
     parser.add_argument('--mode', type=str, default='train')
-    parser.add_argument('--model', type=str, default='epoch0')
-    parser.add_argument('--char2word', type=str2bool, default='True')
+    parser.add_argument('--model', type=str, default='resnet18')
+    parser.add_argument('--saved_model', type=str, default='epoch0')
+    parser.add_argument('--char2word', type=str2bool, default='False')
     parser.add_argument('--succeed', type=str2bool, default='False')
 
     # Train
