@@ -9,11 +9,7 @@ from tqdm import tqdm
 
 inv_dict = pickle.load(open(config.id2char_path, 'rb'))
 config.vocab_size = len(inv_dict)
-
-if config.char2word:
-    model = models.cnnNlp().to(config.device)
-else:
-    model = models.cnnNlpEj().to(config.device)
+model = models.cnnNlp().to(config.device)
 
 if config.succeed:
     start = int(config.model[[a.isdigit() for a in config.saved_model[10:]].index(True) + 10:])
