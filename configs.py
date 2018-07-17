@@ -53,6 +53,7 @@ def get_config(parse=True, **optional_kwargs):
     parser.add_argument('--mode', type=str, default='train')
     parser.add_argument('--model', type=str, default='epoch0')
     parser.add_argument('--char2word', type=str2bool, default='True')
+    parser.add_argument('--succeed', type=str2bool, default='False')
 
     # Train
     parser.add_argument('--batch_size', type=int, default=32)
