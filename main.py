@@ -12,7 +12,7 @@ config.vocab_size = len(inv_dict)
 model = models.cnnNlp().to(config.device)
 
 if config.succeed:
-    start = int(config.model[[a.isdigit() for a in config.saved_model[10:]].index(True) + 10:])
+    start = int(config.saved_model[([a.isdigit() for a in config.saved_model[10:]].index(True) + 10):])
     saved_state = torch.load('./model/' + config.saved_model)
     model.load_state_dict(saved_state)
 else:

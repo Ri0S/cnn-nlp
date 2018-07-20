@@ -10,7 +10,7 @@ class cnnNlp(nn.Module):
         if config.char2word:
             self.char2word = modules.char2Word()
         else:
-            self.embedding = nn.Embedding(config.vocab_size, 64)       
+            self.embedding = nn.Embedding(config.vocab_size, 64, padding_idx=0)
  
         if config.model == 'resnet34':
             resnet = ResNet(modules.BasicBlock, [3, 4, 6, 3])

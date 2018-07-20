@@ -22,7 +22,10 @@ def collate_fn(batch):
     inputs = [a[0] for a in batch]
     target = [int(a[1]) for a in batch]
 
-    maxcLen = max([len(b) for a in inputs for b in a])
+    if config.char2word:
+        maxcLen = max([len(b) for a in inputs for b in a])
+    else:
+        maxcLen = 10
     maxwLen = 300
 
     for sentence in inputs:
