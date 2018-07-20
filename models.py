@@ -3,6 +3,7 @@ import math
 from torch import nn
 from configs import config
 
+
 class cnnNlp(nn.Module):
     def __init__(self):
         super(cnnNlp, self).__init__()
@@ -11,26 +12,30 @@ class cnnNlp(nn.Module):
             self.char2word = modules.char2Word()
         else:
             self.embedding = nn.Embedding(config.vocab_size, 64, padding_idx=0)
- 
-        if config.model == 'resnet34':
-            resnet = ResNet(modules.BasicBlock, [3, 4, 6, 3])
-        elif config.model == 'resnet50':
-            resnet = ResNet(modules.Bottleneck, [3, 4, 6, 3])
-        elif config.model == 'resnet101':
-            resnet = ResNet(modules.Bottleneck, [3, 4, 23, 3])
-        elif config.model == 'resnet152':
-            resnet = ResNet(modules.Bottleneck, [3, 8, 36, 3])
-        else:
-            resnet = ResNet(modules.BasicBlock, [2, 2, 2, 2])
 
-        self.resnet = resnet
+        if config.classifier == 'cnn':
+            if config.model == 'resnet34':
+                resnet = ResNet(modules.BasicBlock, [3, 4, 6, 3])
+            elif config.model == 'resnet50':
+                resnet = ResNet(modules.Bottleneck, [3, 4, 6, 3])
+            elif config.model == 'resnet101':
+                resnet = ResNet(modules.Bottleneck, [3, 4, 23, 3])
+            elif config.model == 'resnet152':
+                resnet = ResNet(modules.Bottleneck, [3, 8, 36, 3])
+            else:
+                resnet = ResNet(modules.BasicBlock, [2, 2, 2, 2])
+
+            self.classifier = resnet
+
+        elif config.classifier == 'rnn':
+            self.classifier = modules.Rnn()
 
     def forward(self, inputs):
         if config.char2word:
             wordvec = self.char2word(inputs).unsqueeze(1)
         else:
             wordvec = self.embedding(inputs).view(inputs.size(0), 1, -1, 64)
-        out = self.resnet(wordvec)
+        out = self.classifier(wordvec)
 
         return out
 
@@ -38,8 +43,8 @@ class cnnNlp(nn.Module):
 class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=51):
-        self.inplanes = 64
         super(ResNet, self).__init__()
+        self.inplanes = 64
         self.conv1 = nn.Conv2d(1, 64, kernel_size=(7, 64), stride=2, padding=(3, 0),
                                bias=False)
         self.bn1 = nn.BatchNorm2d(64)
@@ -101,5 +106,4 @@ class ResNet(nn.Module):
         x = self.fc(x)
 
         return x
-
 

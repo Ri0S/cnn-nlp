@@ -1,20 +1,27 @@
 import torch
 from torch import nn
-import math
-import torch.utils.model_zoo as model_zoo
 from configs import config
-import torchvision
 
-__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
-           'resnet152']
 
-model_urls = {
-    'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
-    'resnet34': 'https://download.pytorch.org/models/resnet34-333f7ec4.pth',
-    'resnet50': 'https://download.pytorch.org/models/resnet50-19c8e357.pth',
-    'resnet101': 'https://download.pytorch.org/models/resnet101-5d3b4d8f.pth',
-    'resnet152': 'https://download.pytorch.org/models/resnet152-b121ed2d.pth',
-}
+class Rnn(nn.Module):
+    def __init__(self):
+        super(Rnn, self).__init__()
+        self.rnn = nn.GRU(input_size=64,
+                          hidden_size=128,
+                          num_layers=1,
+                          bidirectional=False,
+                          batch_first=True)
+
+        self.fc = nn.Linear(128, 51)
+
+    def forward(self, inputs):
+        out, h = self.rnn(inputs.squeeze(1), self.init_hidden(inputs.size(0)))
+        x = self.fc(h)
+
+        return x.squeeze(0)
+
+    def init_hidden(self, bts):
+        return torch.zeros((1, bts, 128), dtype=torch.float32, device=config.device)
 
 
 class char2Word(nn.Module):
@@ -108,4 +115,3 @@ class Bottleneck(nn.Module):
         out = self.relu(out)
 
         return out
-

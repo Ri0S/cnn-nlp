@@ -50,6 +50,7 @@ def get_config(parse=True, **optional_kwargs):
     parser = argparse.ArgumentParser()
 
     # Mode
+    parser.add_argument('--classifier', type=str, default='cnn')
     parser.add_argument('--mode', type=str, default='train')
     parser.add_argument('--model', type=str, default='resnet18')
     parser.add_argument('--saved_model', type=str, default='resnet18_epoch0')
